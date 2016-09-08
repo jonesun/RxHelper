@@ -1,0 +1,18 @@
+apply plugin: 'com.android.application'
+android {
+    //    //生成不同的APK包，有不同的包名，或者不同的资源
+    productFlavors {
+        baidu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+        }
+        _91{
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "91助手"]
+        }
+        hiapk {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "安卓市场"]
+        }
+        _163 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "网易应用"]
+        }
+    }
+}
