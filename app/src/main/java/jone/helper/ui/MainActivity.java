@@ -1,5 +1,7 @@
 package jone.helper.ui;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,12 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.ashokvarma.bottomnavigation.BottomNavigationBar;
-import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
 import java.util.ArrayList;
 
@@ -25,32 +25,50 @@ import jone.helper.ui.fragment.PersonalCenterFragment;
  * Created by jone.sun on 2016/9/7.
  */
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private ArrayList<Fragment> fragments;
+    private MenuItem lastItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationBar bottomNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_bar);
-        bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
-        bottomNavigationBar
-                .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC
-                );
-        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_menu_camera, "Home").setActiveColorResource(android.R.color.holo_red_light))
-                .addItem(new BottomNavigationItem(R.drawable.ic_menu_gallery, "Gallery").setActiveColorResource(android.R.color.holo_green_light))
-                .addItem(new BottomNavigationItem(R.drawable.ic_menu_slideshow, "Slideshow").setActiveColorResource(android.R.color.holo_blue_bright))
-                .addItem(new BottomNavigationItem(R.drawable.ic_menu_manage, "Tools").setActiveColorResource(android.R.color.holo_orange_light))
-                .addItem(new BottomNavigationItem(R.drawable.ic_menu_share, "Share").setActiveColorResource(android.R.color.holo_purple))
-                .setFirstSelectedPosition(0)
-                .initialise();
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_bar);
+        lastItem = bottomNavigationView.getMenu().getItem(0);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (lastItem != item) {
+                lastItem = item;
+                switch (item.getItemId()) {
+                    case R.id.item_home:
+                        onTabSelected(0);
+                        break;
+                    case R.id.item_gallery:
+                        onTabSelected(1);
+                        break;
+                    case R.id.item_slideshow:
+                        onTabSelected(2);
+                        break;
+                    case R.id.item_tools:
+                        onTabSelected(3);
+                        break;
+                    case R.id.item_share:
+                        onTabSelected(4);
+                        break;
+
+                }
+                return true;
+            }
+            return false;
+        });
 
         fragments = getFragments();
         setDefaultFragment();
-        bottomNavigationBar.setTabSelectedListener(this);
     }
 
-    /** * 设置默认的 */
+    /**
+     * 设置默认的
+     */
     private void setDefaultFragment() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -68,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         return fragments;
     }
 
-    @Override
     public void onTabSelected(int position) {
         Log.e("sss", "onTabSelected: " + position);
         if (fragments != null) {
@@ -76,34 +93,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment fragment = fragments.get(position);
-                if (fragment.isAdded()) {
-                    ft.replace(R.id.ll_root, fragment);
-                } else {
-                    ft.add(R.id.ll_root, fragment);
-                }
+                ft.replace(R.id.ll_root, fragment);
                 ft.commitAllowingStateLoss();
             }
         }
 
-    }
-
-    @Override
-    public void onTabUnselected(int position) {
-        Log.e("sss", "onTabUnselected: " + position);
-        if (fragments != null) {
-            if (position < fragments.size()) {
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                Fragment fragment = fragments.get(position);
-                ft.remove(fragment);
-                ft.commitAllowingStateLoss();
-            }
-        }
-    }
-
-    @Override
-    public void onTabReselected(int position) {
-        Log.e("sss", "onTabReselected: " + position);
     }
 
     public static class PlaceholderFragment extends Fragment {

@@ -1,6 +1,8 @@
 package jone.helper.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,26 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import jone.helper.R;
+import jone.helper.ui.setting.SettingsActivity;
+import rx.Observable;
 
 /**
  * Created by jone.sun on 2016/9/7.
  */
 
 public class HomeFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
+
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     public HomeFragment() {
     }
 
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
     public static HomeFragment newInstance(String sectionNumber) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -43,14 +42,18 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.text);
-        textView.setText(getArguments().getString(ARG_SECTION_NUMBER));
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        return rootView;
+
+        TextView textView = (TextView) view.findViewById(R.id.text);
+        textView.setText(getArguments().getString(ARG_SECTION_NUMBER));
     }
 
     @Override
@@ -68,6 +71,7 @@ public class HomeFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(getContext(), SettingsActivity.class));
             return true;
         }
 
