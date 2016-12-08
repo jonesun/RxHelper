@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTabSelected(int position) {
-        Log.e("sss", "onTabSelected: " + position);
+        Log.e("sss", "选择onTabSelected: " + position);
         if (fragments != null) {
             if (position < fragments.size()) {
                 FragmentManager fm = getSupportFragmentManager();
